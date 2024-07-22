@@ -1,19 +1,48 @@
 package logger
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+	"os"
+	"time"
+)
 
-func Info(message string, params interface{}) {
-	fmt.Println("Log info message: ", message, " params: ", params)
+type Logger struct {
+	output *log.Logger
 }
 
-func Error(message string, params interface{}) {
-	fmt.Println("Log error message: ", message, " params: ", params)
+func NewLogger(filePath string) (*Logger, error) {
+	var logger Logger
+	if filePath != "" {
+		file, err := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+		if err != nil {
+			return nil, err
+		}
+		logger.output = log.New(file, "", 0)
+	} else {
+		logger.output = log.New(os.Stdout, "", 0)
+	}
+	return &logger, nil
 }
 
-func Warning(message string, params interface{}) {
-	fmt.Println("Log warning message: ", message, " params: ", params)
+func (l *Logger) log(level string, message string, params interface{}) {
+	timestamp := time.Now().Format(time.RFC3339)
+	logMessage := fmt.Sprintf("%s [%s] %s params: %v", timestamp, level, message, params)
+	l.output.Println(logMessage)
 }
 
-func Fatal(message string, params interface{}) {
-	fmt.Println("Log fatal: message", message, " params: ", params)
+func (l *Logger) Info(message string, params interface{}) {
+	l.log("INFO", message, params)
+}
+
+func (l *Logger) Error(message string, params interface{}) {
+	l.log("ERROR", message, params)
+}
+
+func (l *Logger) Warning(message string, params interface{}) {
+	l.log("WARNING", message, params)
+}
+
+func (l *Logger) Fatal(message string, params interface{}) {
+	l.log("FATAL", message, params)
 }
