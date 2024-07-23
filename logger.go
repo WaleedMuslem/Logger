@@ -43,6 +43,6 @@ func (l *Logger) Warning(message string) {
 	l.log("WARNING", message)
 }
 
-func (l *Logger) Fatal(message string) {
+func (l *Logger) Debug(message string) {
 	l.log("FATAL", message)
 }
