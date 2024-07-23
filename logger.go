@@ -25,24 +25,24 @@ func NewLogger(filePath string) (*Logger, error) {
 	return &logger, nil
 }
 
-func (l *Logger) log(level string, message string, params interface{}) {
+func (l *Logger) log(level string, message string) {
 	timestamp := time.Now().Format(time.RFC3339)
-	logMessage := fmt.Sprintf("%s [%s] %s params: %v", timestamp, level, message, params)
+	logMessage := fmt.Sprintf("%s [%s] %s ", timestamp, level, message)
 	l.output.Println(logMessage)
 }
 
-func (l *Logger) Info(message string, params interface{}) {
-	l.log("INFO", message, params)
+func (l *Logger) Info(message string) {
+	l.log("INFO", message)
 }
 
-func (l *Logger) Error(message string, params interface{}) {
-	l.log("ERROR", message, params)
+func (l *Logger) Error(message string) {
+	l.log("ERROR", message)
 }
 
-func (l *Logger) Warning(message string, params interface{}) {
-	l.log("WARNING", message, params)
+func (l *Logger) Warning(message string) {
+	l.log("WARNING", message)
 }
 
-func (l *Logger) Fatal(message string, params interface{}) {
-	l.log("FATAL", message, params)
+func (l *Logger) Fatal(message string) {
+	l.log("FATAL", message)
 }
